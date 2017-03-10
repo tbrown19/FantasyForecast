@@ -1,6 +1,7 @@
 import prettytable
 import query_team
 import db
+import table_queries as queries
 
 
 def print_table(query_result):
@@ -38,40 +39,22 @@ def remove_cols_from_table(results, desired_cols):
     new_table = []
     for result in results:
         new_result = {key: value for key, value in result.items() if key in desired_cols}
-        #print(new_result)
         new_table.append(new_result)
     return new_table
 
 
 if __name__ == '__main__':
-    # game = queries.get_plays_from_game(2922, {'and qtr': 1})
-    # for play in game:
-    #     print(play['pid'])
-    # oline = queries.get_oline_from_play(474435)
-    # print(oline[1])
-    # for member in oline[1]:
-    #     player = queries.get_player(oline[1][member])
-    #     print(player['pname'])
-    #
-    # weeklyGames = queries.get_all_games(["sprv < -25"/, " or sprv > 25"])
-    # print_table(weeklyGames)
-    #
-    # game_headers = queries.get_table_col_names("game")
-    # game_headers.append('ry')
-    #
-    # results = queries.get_all_games_by_team_stat({}, {"ry/ra": "> 10"}, "ry/ra")
-    #
-    # newTable = remove_cols_from_table(results, game_headers)
-    # print_table(newTable)
-    #
-    # results = queries.team.get_team('GB')
-    # # newTable2 = remove_cols_from_table(results, game_headers)
-    # print(results)
-    # print_table(results)
 
+    # game_headers = queries.get_table_col_names("game")
+    # game_headers.append('succ')
     team1 = query_team.Team.from_team_id(8)
-    results = team1.get_all_games_played()
-    print(results)
-    results2 = team1.get_game_from_season(2011, 1)
-    print(results2)
+    # results = team1.get_all_games_played()
+    # print(results)
+    # results2 = team1.get_all_drives("and drive.succ > 8")
+    # newTable = remove_cols_from_table(results2, game_headers)
+    desiredGame = team1.get_game_from_season_and_week(2011,1)
+    desiredGameID = desiredGame['gid']
+    print_table(desiredGame)
+    desiredStats = team1.get_stats_from_game(desiredGameID)
+    print(desiredStats)
     db.close_connection()

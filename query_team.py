@@ -36,14 +36,46 @@ class Team:
                  ).format(self.team_name, season)
         return db.run_query(query, True)
 
-    def get_game_from_season(self, season, week):
+    def get_game_from_season_and_week(self, season, week):
         query = ('SELECT * '
                  'FROM game '
                  "WHERE (game.v = '{0}' or game.h = '{0}') and game.seas = {1} and game.wk = {2}"
                  ).format(self.team_name, season, week)
         return db.run_query(query, False)
 
-    
+    def get_all_drives(self, drive_limits="", game_limits=""):
+        query = ('SELECT * '
+                 'FROM drive '
+                 'JOIN game '
+                 'ON game.gid = drive.gid {1} '
+                 "WHERE (game.v = '{0}' or game.h = '{0}') {2}"
+                 ).format(self.team_name, drive_limits, game_limits)
+        return db.run_query(query, True)
+
+    def get_all_drives_from_season(self, season,  drive_limits="", game_limits=""):
+
+        query = ('SELECT * '
+                 'FROM drive '
+                 'JOIN game '
+                 'ON game.gid = drive.gid {2} '
+                 "WHERE (game.v = '{0}' or game.h = '{0}') and game.seas={1} {3}"
+                 ).format(self.team_name, season, drive_limits, game_limits)
+        return db.run_query(query, True)
+
+    def get_stats_from_game(self, game):
+        query = ('SELECT * '
+                 'FROM team '
+                 "WHERE team.tname = '{0}' and team.gid = {1}"
+                 ).format(self.team_name, game)
+        return db.run_query(query, True)
+
+    def get_stats_from_season(self, season):
+        query = ('SELECT * '
+                 'FROM team '
+                 "WHERE team.tname = '{0}' and team.gid = {1}"
+                 ).format(self.team_name, game)
+        return db.run_query(query, True)
+
 
 def get_id_from_team_name(team_name):
     query = ('SELECT tid '
